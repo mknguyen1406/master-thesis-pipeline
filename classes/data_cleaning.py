@@ -1,0 +1,140 @@
+import pandas as pd
+from tqdm import tqdm  # to get progress bar with apply function
+
+import spacy  # for data cleaning
+from translate import Translator  # for translation
+
+from gensim.models import Phrases
+from gensim import corpora  # to create a dictionary out of all words
+
+
+class DataCleaner:
+
+    def __init__(self, input_path, output_path, file_name, sheet_name, date_col_index, id_col, text_col, date_col,
+                 keep_pos, translate=False, add_bigrams=True, bigram_min_count=10, dict_no_below=10, dict_no_above=0.2):
+
+        self.input_path = input_path
+        self.output_path = output_path
+        self.file_name = file_name
+        self.sheet_name = sheet_name
+        self.date_col_index = date_col_index
+        self.id_col = id_col
+        self.text_col = text_col
+        self.date_col = date_col
+        self.keep_pos = keep_pos
+        self.translate = translate
+        self.add_bigrams = add_bigrams
+        self.bigram_min_count = bigram_min_count
+        self.dict_no_below = dict_no_below
+        self.dict_no_above = dict_no_above
+
+    def read_data(self):
+
+        # Read raw data
+        file_path = self.input_path + self.file_name + ".xlsx"
+        df = pd.read_excel(file_path, sheet_name=self.sheet_name,
+                           parse_dates=self.date_col_index, infer_datetime_format=True)
+
+        # Sort by date
+        df = df.sort_values(self.date_col).reset_index(drop=True)
+
+        print(f"Raw data read from {file_path}")
+
+        return df
+
+    def clean_data(self, df):
+
+        # Get rid of columns without id, objective, or date
+        target_col = [self.id_col, self.date_col, self.text_col]
+
+        print(f"No. of row before dropping NAs: {df.shape[0]}")
+
+        df = df.dropna(subset=target_col).reset_index(drop=True)
+        df = df[target_col]
+
+        print(f"No. of row before dropping NAs: {df.shape[0]}")
+
+        text_data = df[self.text_col]
+
+        # Clean data with spacy
+        nlp = spacy.load('en_core_web_sm')
+
+        # clean up your text and generate list of words for each document
+        def clean_up(text):
+            text_out = []
+
+            # data cleaning with spacy; returns array of tokenized document
+            try:
+                doc = nlp(text.lower())
+            except:
+                print(f"Error with text '{text}'")
+
+            # only if translation is required - translate to english
+            if self.translate:
+                from_lang = doc._.language["language"]
+                to_lang = 'en'
+
+                if from_lang != 'en':
+                    translator = Translator(to_lang=to_lang, from_lang=from_lang)
+                    translation = translator.translate(text)
+                    doc = nlp(translation)
+
+            for token in doc:
+                # only keep words with following criteria:
+                # not a stop word, alphabetic characters, at least length of 3, and not in POS removal list
+                if not token.is_stop and token.is_alpha and len(token) > 2 and token.pos_ in self.keep_pos:
+                    # Get lemma of word - lowers, removes word inflection, derivation and some POS-tagging
+                    lemma = token.lemma_
+
+                    # Append to array
+                    text_out.append(lemma)
+
+            return text_out
+
+        # Create and register a new `tqdm` instance with `pandas`
+        tqdm.pandas()
+
+        # Apply cleaning to all documents
+        data_clean = text_data.progress_apply(lambda text: clean_up(text))
+
+        print("Finished cleaning")
+
+        return df, data_clean
+
+    def add_bigrams_to_data(self, data_clean):
+
+        if self.add_bigrams:
+            # Add bigrams and trigrams to docs (only ones that appear 10 times or more).
+            bigram = Phrases(data_clean, min_count=self.bigram_min_count)
+
+            for idx in range(len(data_clean)):
+                for tok in bigram[data_clean[idx]]:
+                    if '_' in tok:
+                        # Token is a bigram, add to document.
+                        data_clean[idx].append(tok)
+
+        print("Bigrams added")
+
+        return data_clean
+
+    def create_dictionary(self, data_clean):
+
+        dictionary = corpora.Dictionary(data_clean)
+
+        # Filter out words that occur less than 10 documents, or more than 20% of the documents.
+        print('Number of unique words before removing rare and common words:', len(dictionary))
+
+        dictionary.filter_extremes(no_below=10, no_above=0.2)
+        print('Number of unique words after removing rare and common words:', len(dictionary))
+
+        doc_term_matrix = [dictionary.doc2bow(doc) for doc in data_clean]
+
+        return dictionary, doc_term_matrix
+
+    def save_df_clean(self, df_clean):
+
+        # Save to output folder
+        output_file_path = self.output_path + self.file_name + "_clean.csv"
+        df_clean.to_csv(output_file_path)
+
+        print(f"Clean data frame saved to {output_file_path}")

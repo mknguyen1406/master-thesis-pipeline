@@ -1,0 +1,8 @@
+# ignore all input data files
+**data
+
+# ignore all output data files
+**output
+
+# ignore all files regarding venv
+**venv

@@ -1,5 +1,6 @@
 import pandas as pd
 from tqdm import tqdm  # to get progress bar with apply function
+import os
 
 import spacy  # for data cleaning
 from translate import Translator  # for translation
@@ -117,19 +118,90 @@ class DataCleaner:
 
         return data_clean
 
+    def convert_data_clean(self, df, data_col):
+
+        # return list from string
+        def to_list(text):
+            return text.replace("[", "").replace("]", "").replace("'", "").replace(" ", "").split(",")
+
+        # Apply cleaning function
+        data_clean = df[data_col].apply(lambda text: to_list(text))
+
+        return data_clean
+
     def create_dictionary(self, data_clean):
 
         dictionary = corpora.Dictionary(data_clean)
 
         # Filter out words that occur less than 10 documents, or more than 20% of the documents.
         print('Number of unique words before removing rare and common words:', len(dictionary))
-
-        dictionary.filter_extremes(no_below=10, no_above=0.2)
+        dictionary.filter_extremes(no_below=self.dict_no_below, no_above=self.dict_no_above)
         print('Number of unique words after removing rare and common words:', len(dictionary))
+
+        return dictionary
+
+    def save_dictionary(self, dictionary, file_path):
+
+        # Save dictionary
+        dictionary.save(file_path)
+
+        print(f"Dictionary saved to {file_path}")
+
+    def load_dictionary(self, file_path):
+
+        # Save dictionary
+        dictionary = corpora.Dictionary.load(file_path)
+
+        print(f"Dictionary loaded from {file_path}")
+
+        return dictionary
+
+    def create_merged_dictionary(self, files):
+
+        # return list from string
+        def to_list(text):
+            return text.replace("[", "").replace("]", "").replace("'", "").replace(" ", "").split(",")
+
+        dict_list = []
+        # Get already cleaned data from files
+        for file in files:
+
+            print(f"Start processing {file}")
+
+            df_file = pd.read_csv(self.output_path + file + "_clean.csv", index_col=0)
+
+            # Apply cleaning function
+            data_clean = df_file["data_clean"].apply(lambda text: to_list(text))
+
+            # Create dictionary
+            dictionary = corpora.Dictionary(data_clean)
+
+            # Filter out words that occur less than 10 documents, or more than 20% of the documents.
+            print('Number of unique words before removing rare and common words:', len(dictionary))
+
+            dictionary.filter_extremes(no_below=10, no_above=0.2)
+            print('Number of unique words after removing rare and common words:', len(dictionary))
+
+            dict_list.append(dictionary)
+
+        print("All dictionaries created")
+
+        # Merge dictionaries from list
+        dictionary = dict_list[0]
+        for i in range(len(dict_list) - 1):
+            dictionary.merge_with(dict_list[i+1])
+
+        print("All dictionaries merged")
+
+        return dictionary
+
+    def create_doc_term_matrix(self, dictionary, data_clean):
 
         doc_term_matrix = [dictionary.doc2bow(doc) for doc in data_clean]
 
-        return dictionary, doc_term_matrix
+        print("Doc-term-matrix created")
+
+        return doc_term_matrix
 
     def save_df_clean(self, df_clean):
 

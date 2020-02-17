@@ -6,3 +6,6 @@
 
 # ignore all files regarding venv
 **venv
+
+# ignore models
+**models

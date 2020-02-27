@@ -88,14 +88,44 @@ class DtmModel:
         df = pd.DataFrame(data)
         return df
 
-    def get_doc_topics(self, doc_term_matrix):
+    def get_doc_topics(self, doc_term_matrix, df_join):
 
         # Get topic assignment for each document
         doc_topic, topic_term, doc_lengths, term_frequency, vocab = self.model.dtm_vis(doc_term_matrix, 0)
 
+        # Create topic label vector
         doc_topic_no = [np.argmax(array) for array in doc_topic]
 
-        return doc_topic_no
+        # Create document topic matrix
+        topic_cols = [
+            "topic_0",
+            "topic_1",
+            "topic_2",
+            "topic_3",
+            "topic_4",
+            "topic_5",
+            "topic_6",
+            "topic_7",
+            "topic_8",
+            "topic_9",
+            "topic_10",
+            "topic_11",
+            "topic_12",
+            "topic_13",
+            "topic_14",
+            "topic_15",
+            "topic_16",
+            "topic_17",
+            "topic_18",
+            "topic_19"
+        ]
+
+        df_doc_topic = pd.DataFrame(doc_topic, columns=topic_cols)
+        df_doc_topic["topic_label"] = doc_topic_no
+
+        df_output = pd.concat([df_join, df_doc_topic], axis=1)
+
+        return df_output
 
     def generate_topic_tables(self):
         """

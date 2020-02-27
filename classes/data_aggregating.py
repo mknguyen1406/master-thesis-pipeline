@@ -46,8 +46,8 @@ class DataAggregator:
                     df_file = df_file.dropna(subset=self.dropna_cols).reset_index(drop=True)
 
                 # Add framework programme information
-                if self.date_col:
-                    df_file["fp"] = i + 1
+                df_file["fp"] = self.files[i]
+                df_file["fp_no"] = i
 
                 self.df_array.append(df_file)
 
@@ -80,6 +80,15 @@ class DataAggregator:
 
         # Read from csv
         df = pd.read_csv(file_path, index_col=0, parse_dates=[self.date_col])
+
+        print(f"Aggregated file read from {file_path}")
+
+        return df
+
+    def read_final_from_excel(self, file_path):
+
+        # Read from csv
+        df = pd.read_excel(file_path, index_col=0, parse_dates=[self.date_col])
 
         print(f"Aggregated file read from {file_path}")
 

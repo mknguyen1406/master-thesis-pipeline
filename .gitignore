@@ -9,3 +9,6 @@
 
 # ignore models
 **models
+
+# ignore dashboard
+**dashboard

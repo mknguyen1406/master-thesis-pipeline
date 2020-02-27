@@ -1,9 +1,9 @@
 import pandas as pd
 from tqdm import tqdm  # to get progress bar with apply function
-import os
 
 import spacy  # for data cleaning
 from translate import Translator  # for translation
+import re
 
 from gensim.models import Phrases
 from gensim import corpora  # to create a dictionary out of all words
@@ -12,7 +12,8 @@ from gensim import corpora  # to create a dictionary out of all words
 class DataCleaner:
 
     def __init__(self, input_path, output_path, file_name, sheet_name, date_col_index, id_col, text_col, date_col,
-                 keep_pos, translate=False, add_bigrams=True, bigram_min_count=10, dict_no_below=10, dict_no_above=0.2):
+                 keep_pos, translate=False, add_bigrams=True, bigram_min_count=10, dict_no_below=5, dict_no_above=0.5,
+                 additional_stop_words=None):
 
         self.input_path = input_path
         self.output_path = output_path
@@ -28,6 +29,7 @@ class DataCleaner:
         self.bigram_min_count = bigram_min_count
         self.dict_no_below = dict_no_below
         self.dict_no_above = dict_no_above
+        self.additional_stop_words = additional_stop_words
 
     def read_data(self):
 
@@ -45,6 +47,15 @@ class DataCleaner:
 
     def clean_data(self, df):
 
+        nlp = spacy.load('en_core_web_sm')
+
+        # Add domain-specific stop words
+        for stop_word in self.additional_stop_words:
+            nlp.Defaults.stop_words.add(stop_word)
+
+        # Get stop_word_list
+        stop_word_list = list(nlp.Defaults.stop_words)
+
         # Get rid of columns without id, objective, or date
         target_col = [self.id_col, self.date_col, self.text_col]
 
@@ -57,38 +68,51 @@ class DataCleaner:
 
         text_data = df[self.text_col]
 
-        # Clean data with spacy
-        nlp = spacy.load('en_core_web_sm')
-
         # clean up your text and generate list of words for each document
         def clean_up(text):
             text_out = []
 
             # data cleaning with spacy; returns array of tokenized document
             try:
-                doc = nlp(text.lower())
+                # Remove leading and tailing whitespaces
+                text = text.strip()
+
+                # Lowercase
+                text = text.lower()
+
+                # Replace multiple whitespaces with single one
+                text = re.sub(' +', ' ', text)
+
+                # Parse with spacy
+                doc = nlp(text)
+
+                # only if translation is required - translate to english
+                # if self.translate:
+                #     from_lang = doc._.language["language"]
+                #     to_lang = 'en'
+                #
+                #     if from_lang != 'en':
+                #         translator = Translator(to_lang=to_lang, from_lang=from_lang)
+                #         translation = translator.translate(text)
+                #         doc = self.nlp(translation)
+
+                for token in doc:
+                    # only keep words with following criteria:
+                    # not a stop word, alphabetic characters, at least length of 3, and not in POS removal list
+
+                    # Get word lemma
+                    lemma = token.lemma_
+                    pos = token.pos_
+                    is_alpha = token.is_alpha
+
+                    # Only keep if not in POS removal list, not stop word, is alphabetic, length at least 3
+                    if pos in self.keep_pos and len(lemma) > 2 and is_alpha and lemma not in stop_word_list:
+
+                        # Append to array
+                        text_out.append(lemma)
+
             except:
                 print(f"Error with text '{text}'")
-
-            # only if translation is required - translate to english
-            if self.translate:
-                from_lang = doc._.language["language"]
-                to_lang = 'en'
-
-                if from_lang != 'en':
-                    translator = Translator(to_lang=to_lang, from_lang=from_lang)
-                    translation = translator.translate(text)
-                    doc = nlp(translation)
-
-            for token in doc:
-                # only keep words with following criteria:
-                # not a stop word, alphabetic characters, at least length of 3, and not in POS removal list
-                if not token.is_stop and token.is_alpha and len(token) > 2 and token.pos_ in self.keep_pos:
-                    # Get lemma of word - lowers, removes word inflection, derivation and some POS-tagging
-                    lemma = token.lemma_
-
-                    # Append to array
-                    text_out.append(lemma)
 
             return text_out
 
@@ -165,7 +189,6 @@ class DataCleaner:
         dict_list = []
         # Get already cleaned data from files
         for file in files:
-
             print(f"Start processing {file}")
 
             df_file = pd.read_csv(self.output_path + file + "_clean.csv", index_col=0)
@@ -189,7 +212,7 @@ class DataCleaner:
         # Merge dictionaries from list
         dictionary = dict_list[0]
         for i in range(len(dict_list) - 1):
-            dictionary.merge_with(dict_list[i+1])
+            dictionary.merge_with(dict_list[i + 1])
 
         print("All dictionaries merged")
 

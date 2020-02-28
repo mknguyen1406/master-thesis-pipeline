@@ -77,50 +77,50 @@ if __name__ == '__main__':
         "file_name": "<<PLACEHOLER>>",
         "sheet_name": "project",
         "date_col_index": ["startDate", "endDate"],
-        "id_col": "id",
+        "id_col": "rcn",
         "text_col": "objective",
         "date_col": "startDate",
         "keep_pos": ["PROPN", "NOUN", "ADJ"],
         "translate": False,
         "add_bigrams": True,
         "bigram_min_count": 50,
-        "dict_no_below": 50,
+        "dict_no_below": 20,
         "dict_no_above": 0.999,
         "additional_stop_words": additional_stop_words
     }
 
-    for file_name in files:
-
-        print(f"###########################\nStart processing file {file_name} at {datetime.datetime.now()}")
-
-        cleaner_params["file_name"] = file_name
-
-        # Initialize cleaner
-        cleaner = DataCleaner(**cleaner_params)
-
-        # Read data
-        df_raw = cleaner.read_data()
-
-        # Only take small sample
-        # df_raw = df_raw[:10]
-
-        try:
-            # Clean data
-            df_clean, data_clean = cleaner.clean_data(df_raw)
-
-            # Add bigrams
-            data_clean = cleaner.add_bigrams_to_data(data_clean)
-
-            # Add clean data to data frame
-            df_clean["data_clean"] = data_clean
-
-            # Save cleaned data frame
-            cleaner.save_df_clean(df_clean)
-
-        except:
-            print(f"#######################################\nError at file {file_name}")
-
-        print(f"###########################\nDone processing file {file_name} at {datetime.datetime.now()}\n\n")
+    # for file_name in files:
+    #
+    #     print(f"###########################\nStart processing file {file_name} at {datetime.datetime.now()}")
+    #
+    #     cleaner_params["file_name"] = file_name
+    #
+    #     # Initialize cleaner
+    #     cleaner = DataCleaner(**cleaner_params)
+    #
+    #     # Read data
+    #     df_raw = cleaner.read_data()
+    #
+    #     # Only take small sample
+    #     # df_raw = df_raw[:10]
+    #
+    #     try:
+    #         # Clean data
+    #         df_clean, data_clean = cleaner.clean_data(df_raw)
+    #
+    #         # Add bigrams
+    #         data_clean = cleaner.add_bigrams_to_data(data_clean)
+    #
+    #         # Add clean data to data frame
+    #         df_clean["data_clean"] = data_clean
+    #
+    #         # Save cleaned data frame
+    #         cleaner.save_df_clean(df_clean)
+    #
+    #     except:
+    #         print(f"#######################################\nError at file {file_name}")
+    #
+    #     print(f"###########################\nDone processing file {file_name} at {datetime.datetime.now()}\n\n")
 
     #############################################################
     # Aggregate data
@@ -135,13 +135,13 @@ if __name__ == '__main__':
         "file_suffix": "_clean.csv",
         "file_format": "csv",
         "date_col": "startDate",
-        "target_cols": ["id", "startDate", "data_clean", "fp", "fp_no"]
+        "target_cols": ["rcn", "startDate", "data_clean", "fp", "fp_no"]
     }
 
     aggregator = DataAggregator(**aggregator_params)
 
-    df_agg = aggregator.aggregate_data()
-    aggregator.save_to_csv(df_agg)
+    # df_agg = aggregator.aggregate_data()
+    # aggregator.save_to_csv(df_agg)
 
     #############################################################
     # Create doc-term-matrix
@@ -152,7 +152,7 @@ if __name__ == '__main__':
         f"##################################\nFinished data aggregation. Total duration was {finish_time - start_time}\n")
 
     # Read already aggregated data
-    # df_agg = aggregator.read_final_from_csv()
+    df_agg = aggregator.read_final_from_csv()
     # df_agg = df_agg.sample(100).reset_index(drop=True)
 
     # Get converted cleaned data
@@ -227,14 +227,14 @@ if __name__ == '__main__':
     # Initialize model
     dtm_model = DtmModel(**model_params)
 
-    # Prepare data
-    df_year = dtm_model.prepare_data(df_agg)
-
-    # Train model
-    dtm_model.train_model()
-
-    # Save model
-    dtm_model.save_model()
+    # # Prepare data
+    # df_year = dtm_model.prepare_data(df_agg)
+    #
+    # # Train model
+    # dtm_model.train_model()
+    #
+    # # Save model
+    # dtm_model.save_model()
 
     #############################################################
     # Assign topics and programmes to documents
@@ -244,8 +244,11 @@ if __name__ == '__main__':
     print(
         f"##################################\nFinished modeling. Total duration was {finish_time - start_time}\n")
 
-    # # Load previously saved model
-    # dtm_model.load_model()
+    # Load previously saved model
+    dtm_model.load_model()
+
+    # Get topic assignments per document and save
+    df_agg_topics = dtm_model.get_doc_topics(doc_term_matrix, df_agg)
 
     # Get aggregated data
     aggregator_params = {
@@ -255,8 +258,8 @@ if __name__ == '__main__':
         "file_format": "xlsx",
         "sheet_name": "project",
         "date_col": "startDate",
-        "target_cols": ["id", "title", "ecMaxContribution", "totalCost", "coordinatorCountry"],
-        "dropna_cols": ["id", "startDate", "objective"]
+        "target_cols": ["rcn", "title", "ecMaxContribution", "totalCost", "coordinatorCountry"],
+        "dropna_cols": ["rcn", "startDate", "objective"]
     }
 
     # Aggregate raw data with desired information
@@ -264,43 +267,42 @@ if __name__ == '__main__':
     df_info = aggregator.aggregate_data()
 
     # Make sure data type of join key is identical and join info
-    df_info["id"] = df_info["id"].apply(str)
-    df_agg["id"] = df_agg["id"].apply(str)
-    df_join = df_agg.merge(df_info, how="left", on="id")
+    df_info["rcn"] = df_info["rcn"].apply(str)
+    df_agg_topics["rcn"] = df_agg_topics["rcn"].apply(str)
+    df_join = df_agg_topics.merge(df_info, how="left", on="rcn")
 
-    # Get topic assignments per document and save
-    df_output = dtm_model.get_doc_topics(doc_term_matrix, df_join)
-    df_output.to_excel("output/all_projects_topics.xlsx", index=False)
+    # Save result
+    df_join.to_excel("output/all_projects_topics.xlsx", index=False, float_format="%.15f")
 
-    # Generate excel file with topic data frames per
-    df_topics = dtm_model.generate_topic_tables()
-    df_topics.to_csv("output/topics/all_topics.csv", index=False, float_format="%.15f", sep=";", decimal=",")
-
-    # Generate topic detail table
-    dtm_model.generate_topic_detail_tables()
-
-    # Calculate differences between topic time slices
-    dtm_model.calculate_word_dif("output/topics/")
-
-    #############################################################
-    # Aggregate topic detail csv
-    #############################################################
-
-    topic_dif_files = [f"topic_dif_{i}" for i in range(20)]
-
-    # Get aggregated data
-    aggregator_params = {
-        "directory": "output/topics/",
-        "files": topic_dif_files,
-        "file_suffix": ".csv",
-        "file_format": "csv",
-    }
-
-    # Aggregate raw data with desired information
-    aggregator = DataAggregator(**aggregator_params)
-    df_topics_detail = aggregator.aggregate_data()
-    df_topics_detail.to_csv("output/topics/all_topics_detail.csv", index=False, float_format="%.15f", sep=";",
-                            decimal=",")
+    # # Generate excel file with topic data frames per
+    # df_topics = dtm_model.generate_topic_tables()
+    # df_topics.to_csv("output/topics/all_topics.csv", index=False, float_format="%.15f", sep=";", decimal=",")
+    #
+    # # Generate topic detail table
+    # dtm_model.generate_topic_detail_tables()
+    #
+    # # Calculate differences between topic time slices
+    # dtm_model.calculate_word_dif("output/topics/")
+    #
+    # #############################################################
+    # # Aggregate topic detail csv
+    # #############################################################
+    #
+    # topic_dif_files = [f"topic_dif_{i}" for i in range(20)]
+    #
+    # # Get aggregated data
+    # aggregator_params = {
+    #     "directory": "output/topics/",
+    #     "files": topic_dif_files,
+    #     "file_suffix": ".csv",
+    #     "file_format": "csv",
+    # }
+    #
+    # # Aggregate raw data with desired information
+    # aggregator = DataAggregator(**aggregator_params)
+    # df_topics_detail = aggregator.aggregate_data()
+    # df_topics_detail.to_csv("output/topics/all_topics_detail.csv", index=False, float_format="%.15f", sep=";",
+    #                         decimal=",")
 
     #############################################################
     # Calculate evaluation metrics

@@ -88,7 +88,7 @@ class DtmModel:
         df = pd.DataFrame(data)
         return df
 
-    def get_doc_topics(self, doc_term_matrix, df_join):
+    def get_doc_topics(self, doc_term_matrix, df_agg):
 
         # Get topic assignment for each document
         doc_topic, topic_term, doc_lengths, term_frequency, vocab = self.model.dtm_vis(doc_term_matrix, 0)
@@ -121,9 +121,9 @@ class DtmModel:
         ]
 
         df_doc_topic = pd.DataFrame(doc_topic, columns=topic_cols)
-        df_doc_topic["topic_label"] = doc_topic_no
+        df_doc_topic["topic_no"] = doc_topic_no
 
-        df_output = pd.concat([df_join, df_doc_topic], axis=1)
+        df_output = pd.concat([df_agg, df_doc_topic], axis=1)
 
         return df_output
 

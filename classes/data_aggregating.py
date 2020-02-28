@@ -29,12 +29,12 @@ class DataAggregator:
                 # Check format
                 if self.file_format == "csv":
                     if self.date_col:
-                        df_file = pd.read_csv(self.directory + self.files[i] + self.file_suffix, index_col=0,
+                        df_file = pd.read_csv(self.directory + self.files[i] + self.file_suffix,
                                               parse_dates=[self.date_col])
                     else:
                         df_file = pd.read_csv(self.directory + self.files[i] + self.file_suffix)
                 else:
-                    df_file = pd.read_excel(self.directory + self.files[i] + self.file_suffix, index_col=0,
+                    df_file = pd.read_excel(self.directory + self.files[i] + self.file_suffix,
                                             sheet_name=self.sheet_name, parse_dates=[self.date_col])
 
                 # Sort by date

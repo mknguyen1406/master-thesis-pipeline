@@ -5,6 +5,7 @@ from gensim.models.wrappers import DtmModel as DtmModelClass
 
 import pickle # to save data to files for later use
 import datetime
+import re
 
 from gensim.test.utils import common_corpus, common_dictionary
 
@@ -307,3 +308,81 @@ class DtmModel:
         df_output = pd.DataFrame(topic_list, columns=["word", "topic", "time", "time_no", "load", "dif"])
 
         df_output.to_csv(folder_path + "all_topics.csv")
+
+    def generate_project_topic_table(self, df_raw):
+
+        multicol1 = pd.MultiIndex.from_tuples([
+            ('topic', 'topic_0'),
+            ('topic', 'topic_1'),
+            ('topic', 'topic_2'),
+            ('topic', 'topic_3'),
+            ('topic', 'topic_4'),
+            ('topic', 'topic_5'),
+            ('topic', 'topic_6'),
+            ('topic', 'topic_7'),
+            ('topic', 'topic_8'),
+            ('topic', 'topic_9'),
+            ('topic', 'topic_10'),
+            ('topic', 'topic_11'),
+            ('topic', 'topic_12'),
+            ('topic', 'topic_13'),
+            ('topic', 'topic_14'),
+            ('topic', 'topic_15'),
+            ('topic', 'topic_16'),
+            ('topic', 'topic_17'),
+            ('topic', 'topic_18'),
+            ('topic', 'topic_19')
+        ])
+
+        columns = [
+            "topic_0",
+            "topic_1",
+            "topic_2",
+            "topic_3",
+            "topic_4",
+            "topic_5",
+            "topic_6",
+            "topic_7",
+            "topic_8",
+            "topic_9",
+            "topic_10",
+            "topic_11",
+            "topic_12",
+            "topic_13",
+            "topic_14",
+            "topic_15",
+            "topic_16",
+            "topic_17",
+            "topic_18",
+            "topic_19"
+        ]
+
+        # Set rcn as index
+        df_raw = df_raw.set_index("rcn")
+
+        # Only keep topic columns
+        df_flat = df_raw[columns]
+
+        # Create multi index data frame
+        df_flat_multi = pd.DataFrame(df_flat.values, index=df_flat.index, columns=multicol1)
+
+        # Stack data frame
+        df_stacked = df_flat_multi.stack()
+
+        # Set rcn as single index
+        df_stacked = df_stacked.reset_index().set_index("rcn")
+
+        # Rename columns
+        df_stacked = df_stacked.rename(columns={"level_1": "topic", "topic": "load"})
+
+        # Remove unnecessary prefix from topic column
+        def remove_prefix(text):
+            return re.sub("topic_", "", text)
+
+        df_stacked["topic"] = df_stacked["topic"].apply(lambda text: remove_prefix(text))
+
+        # Join project information and make rcn normal column again
+        df_project_info = df_raw[["startDate", "fp", "title"]]
+        df_project_topics = df_stacked.join(df_project_info, how="left").reset_index()
+
+        return df_project_topics

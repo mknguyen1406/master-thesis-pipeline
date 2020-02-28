@@ -4,6 +4,7 @@ from classes.lda_modeling import LdaModel
 from classes.dtm_modeling import DtmModel
 from classes.dtm_evaluation import Evaluator
 # from classes.data_exploration import Explorer
+import pandas as pd
 
 from gensim import corpora
 
@@ -33,8 +34,3 @@ if __name__ == '__main__':
         "dropna_cols": ["rcn", "startDate", "objective"]
     }
 
-    # Aggregate raw data with desired information
-    aggregator = DataAggregator(**aggregator_params)
-    df_info = aggregator.aggregate_data()
-
-    print(df_info.head())

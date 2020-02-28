@@ -274,6 +274,10 @@ if __name__ == '__main__':
     # Save result
     df_join.to_excel("output/all_projects_topics.xlsx", index=False, float_format="%.15f")
 
+    # Generate stacked project topic table
+    df_project_topics = dtm_model.generate_project_topic_table(df_join)
+    df_project_topics.to_csv("output/project_topics_stacked.csv", float_format="%.15f", sep=";", decimal=",")
+
     # # Generate excel file with topic data frames per
     # df_topics = dtm_model.generate_topic_tables()
     # df_topics.to_csv("output/topics/all_topics.csv", index=False, float_format="%.15f", sep=";", decimal=",")

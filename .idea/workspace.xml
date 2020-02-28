@@ -3,10 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2de0cda3-210b-43e4-b1fd-f38903a8ae51" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/data_aggregating.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/data_aggregating.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes/dtm_modeling.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/dtm_modeling.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_exploration.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_exploration.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -65,7 +63,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="master-thesis-pipeline" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -89,9 +87,36 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="main_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="master-thesis-pipeline" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.main_test" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.main_test" />
       </list>
     </recent_temporary>
   </component>
@@ -115,7 +140,7 @@
       <workItem from="1582644649510" duration="2194000" />
       <workItem from="1582761323905" duration="2669000" />
       <workItem from="1582785478559" duration="29577000" />
-      <workItem from="1582884129147" duration="8549000" />
+      <workItem from="1582884129147" duration="16066000" />
     </task>
     <task id="LOCAL-00001" summary="major commit">
       <created>1581913272186</created>
@@ -131,7 +156,14 @@
       <option name="project" value="LOCAL" />
       <updated>1582847058881</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="data_aggregation: removed reading index col at read_csv/read_excel&#10;data_cleaning: changed name of topic label column;  &#10;data_exploration: changed id column to &quot;rcn&quot; instead of &quot;id&quot;">
+      <created>1582908386004</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1582908386004</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -153,30 +185,18 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="major commit" />
     <MESSAGE value="data_aggregation: added fp and fp_no column to project output excel&#10;data_cleaning: added removal of leading, tailing and multiple whitespaces. allowed for additional stop words. fixed check of wrong lemma. &#10;data_exploration: added data exploration class&#10;dtm_evaluation: added dtm evaluation class" />
-    <option name="LAST_COMMIT_MESSAGE" value="data_aggregation: added fp and fp_no column to project output excel&#10;data_cleaning: added removal of leading, tailing and multiple whitespaces. allowed for additional stop words. fixed check of wrong lemma. &#10;data_exploration: added data exploration class&#10;dtm_evaluation: added dtm evaluation class" />
+    <MESSAGE value="data_aggregation: removed reading index col at read_csv/read_excel&#10;data_cleaning: changed name of topic label column;  &#10;data_exploration: changed id column to &quot;rcn&quot; instead of &quot;id&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="data_aggregation: removed reading index col at read_csv/read_excel&#10;data_cleaning: changed name of topic label column;  &#10;data_exploration: changed id column to &quot;rcn&quot; instead of &quot;id&quot;" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main_test.py</url>
-          <line>39</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="df_info.shape" language="Python" />
-        <watch expression="df_join.shape" language="Python" />
-        <watch expression="len(df_info[&quot;id&quot;].unique())" language="Python" />
-        <watch expression="len(df_info[&quot;rcn&quot;].unique())" language="Python" />
-        <watch expression="df_agg.join(df_info, how=&quot;left&quot;, lsuffix=&quot;_l&quot;, rsuffix=&quot;_r&quot;).shape" language="Python" />
-        <watch expression="df_agg.shape" language="Python" />
+        <watch expression="df_stacked.reset_index().set_index(&quot;rcn&quot;).rename(columns={&quot;level_1&quot;: &quot;topic&quot;, &quot;topic&quot;: &quot;load&quot;}).join(df_raw[[&quot;startDate&quot;, &quot;fp&quot;, &quot;title&quot;]], how=&quot;left&quot;).reset_index()" language="Python" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/master_thesis_pipeline$main.coverage" NAME="main Coverage Results" MODIFIED="1582907536429" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/master_thesis_pipeline$main_test.coverage" NAME="main_test Coverage Results" MODIFIED="1582911945353" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/master_thesis_pipeline$main.coverage" NAME="main Coverage Results" MODIFIED="1582915581752" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

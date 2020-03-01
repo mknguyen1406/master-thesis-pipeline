@@ -5,32 +5,20 @@ from classes.dtm_modeling import DtmModel
 from classes.dtm_evaluation import Evaluator
 # from classes.data_exploration import Explorer
 import pandas as pd
+from classes.word_cloud import WordCloud
 
 from gensim import corpora
 
 import datetime
 
 if __name__ == '__main__':
-    # Define all files to be processed
-    files = ["fp1_projects",
-             "fp2_projects",
-             "fp3_projects",
-             "fp4_projects",
-             "fp5_projects",
-             "fp6_projects",
-             "fp7_projects",
-             "h2020_projects"
-             ]
 
-    # Get aggregated data
-    aggregator_params = {
-        "directory": "data/",
-        "files": files,
-        "file_suffix": ".xlsx",
-        "file_format": "xlsx",
-        "sheet_name": "project",
-        "date_col": "startDate",
-        "target_cols": ["rcn", "title", "ecMaxContribution", "totalCost", "coordinatorCountry"],
-        "dropna_cols": ["rcn", "startDate", "objective"]
-    }
+    file_path = "output/topics/all_topics.csv"
+    word_no = 50
+    topic_no = 20
+
+    wc = WordCloud(file_path, word_no, topic_no)
+
+    wc.generate_word_clouds()
+    wc.generate_visualization("images/3_word_clouds.png")
 

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2de0cda3-210b-43e4-b1fd-f38903a8ae51" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/classes/word_cloud.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/dtm_modeling.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/dtm_modeling.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_test.py" afterDir="false" />
     </list>
@@ -28,7 +28,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/main.py" />
-    <property name="settings.editor.selected.configurable" value="PyConsoleConfigurable.Python Console" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -63,7 +63,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.main_test">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="master-thesis-pipeline" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -115,8 +115,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.main_test" />
+        <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
   </component>
@@ -140,7 +140,9 @@
       <workItem from="1582644649510" duration="2194000" />
       <workItem from="1582761323905" duration="2669000" />
       <workItem from="1582785478559" duration="29577000" />
-      <workItem from="1582884129147" duration="16066000" />
+      <workItem from="1582884129147" duration="16117000" />
+      <workItem from="1582972986128" duration="2441000" />
+      <workItem from="1583002229982" duration="6184000" />
     </task>
     <task id="LOCAL-00001" summary="major commit">
       <created>1581913272186</created>
@@ -163,7 +165,14 @@
       <option name="project" value="LOCAL" />
       <updated>1582908386004</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="dtm_modeling: implemented stacked project list by topic">
+      <created>1582926251739</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1582926251739</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -186,17 +195,18 @@
     <MESSAGE value="major commit" />
     <MESSAGE value="data_aggregation: added fp and fp_no column to project output excel&#10;data_cleaning: added removal of leading, tailing and multiple whitespaces. allowed for additional stop words. fixed check of wrong lemma. &#10;data_exploration: added data exploration class&#10;dtm_evaluation: added dtm evaluation class" />
     <MESSAGE value="data_aggregation: removed reading index col at read_csv/read_excel&#10;data_cleaning: changed name of topic label column;  &#10;data_exploration: changed id column to &quot;rcn&quot; instead of &quot;id&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="data_aggregation: removed reading index col at read_csv/read_excel&#10;data_cleaning: changed name of topic label column;  &#10;data_exploration: changed id column to &quot;rcn&quot; instead of &quot;id&quot;" />
+    <MESSAGE value="dtm_modeling: implemented stacked project list by topic" />
+    <option name="LAST_COMMIT_MESSAGE" value="dtm_modeling: implemented stacked project list by topic" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="df_stacked.reset_index().set_index(&quot;rcn&quot;).rename(columns={&quot;level_1&quot;: &quot;topic&quot;, &quot;topic&quot;: &quot;load&quot;}).join(df_raw[[&quot;startDate&quot;, &quot;fp&quot;, &quot;title&quot;]], how=&quot;left&quot;).reset_index()" language="Python" />
+        <watch expression="WordCloud()" language="Python" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/master_thesis_pipeline$main_test.coverage" NAME="main_test Coverage Results" MODIFIED="1582911945353" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/master_thesis_pipeline$main.coverage" NAME="main Coverage Results" MODIFIED="1582915581752" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/master_thesis_pipeline$main_test.coverage" NAME="main_test Coverage Results" MODIFIED="1583020507691" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/master_thesis_pipeline$main.coverage" NAME="main Coverage Results" MODIFIED="1583012484937" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

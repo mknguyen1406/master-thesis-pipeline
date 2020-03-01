@@ -3,9 +3,8 @@ from classes.data_aggregating import DataAggregator
 from classes.lda_modeling import LdaModel
 from classes.dtm_modeling import DtmModel
 from classes.dtm_evaluation import Evaluator
-# from classes.data_exploration import Explorer
+from classes.data_exploration import Explorer
 
-from gensim import corpora
 
 import datetime
 
@@ -161,10 +160,10 @@ if __name__ == '__main__':
 
     # Create dictionary
     dictionary = cleaner.create_dictionary(data_clean)
-    cleaner.save_dictionary(dictionary, "assets/dictionary_all_projects")
+    # cleaner.save_dictionary(dictionary, "assets/dictionary_all_projects")
 
     # # Load dictionary
-    # dictionary = cleaner.load_dictionary("assets/dictionary_all_projects")
+    dictionary = cleaner.load_dictionary("assets/dictionary_all_projects")
 
     # Create dtm
     doc_term_matrix = cleaner.create_doc_term_matrix(dictionary, data_clean)
@@ -266,17 +265,17 @@ if __name__ == '__main__':
     aggregator = DataAggregator(**aggregator_params)
     df_info = aggregator.aggregate_data()
 
-    # Make sure data type of join key is identical and join info
-    df_info["rcn"] = df_info["rcn"].apply(str)
-    df_agg_topics["rcn"] = df_agg_topics["rcn"].apply(str)
-    df_join = df_agg_topics.merge(df_info, how="left", on="rcn")
-
-    # Save result
-    df_join.to_excel("output/all_projects_topics.xlsx", index=False, float_format="%.15f")
-
-    # Generate stacked project topic table
-    df_project_topics = dtm_model.generate_project_topic_table(df_join)
-    df_project_topics.to_csv("output/project_topics_stacked.csv", float_format="%.15f", sep=";", decimal=",")
+    # # Make sure data type of join key is identical and join info
+    # df_info["rcn"] = df_info["rcn"].apply(str)
+    # df_agg_topics["rcn"] = df_agg_topics["rcn"].apply(str)
+    # df_join = df_agg_topics.merge(df_info, how="left", on="rcn")
+    #
+    # # Save result
+    # df_join.to_excel("output/all_projects_topics.xlsx", index=False, float_format="%.15f")
+    #
+    # # Generate stacked project topic table
+    # df_project_topics = dtm_model.generate_project_topic_table(df_join)
+    # df_project_topics.to_csv("output/project_topics_stacked.csv", float_format="%.15f", sep=";", decimal=",")
 
     # # Generate excel file with topic data frames per
     # df_topics = dtm_model.generate_topic_tables()

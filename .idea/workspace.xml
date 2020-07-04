@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2de0cda3-210b-43e4-b1fd-f38903a8ae51" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/classes/word_cloud.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/dtm_evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/dtm_evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/dtm_modeling.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/dtm_modeling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/word_cloud.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/visualization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_test.py" afterDir="false" />
     </list>
@@ -28,7 +30,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/main.py" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -142,7 +144,22 @@
       <workItem from="1582785478559" duration="29577000" />
       <workItem from="1582884129147" duration="16117000" />
       <workItem from="1582972986128" duration="2441000" />
-      <workItem from="1583002229982" duration="6184000" />
+      <workItem from="1583002229982" duration="6235000" />
+      <workItem from="1583022131426" duration="5878000" />
+      <workItem from="1583109778956" duration="20941000" />
+      <workItem from="1583333461682" duration="854000" />
+      <workItem from="1583339851017" duration="9291000" />
+      <workItem from="1583396822883" duration="6961000" />
+      <workItem from="1583508869427" duration="2446000" />
+      <workItem from="1583689918497" duration="4167000" />
+      <workItem from="1583748347084" duration="2353000" />
+      <workItem from="1583875686953" duration="78000" />
+      <workItem from="1583933455577" duration="5845000" />
+      <workItem from="1584003106451" duration="1994000" />
+      <workItem from="1584093706155" duration="13000" />
+      <workItem from="1587564523622" duration="3968000" />
+      <workItem from="1587652217198" duration="2724000" />
+      <workItem from="1588587067246" duration="15000" />
     </task>
     <task id="LOCAL-00001" summary="major commit">
       <created>1581913272186</created>
@@ -172,7 +189,14 @@
       <option name="project" value="LOCAL" />
       <updated>1582926251739</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="added class to generate word clouds">
+      <created>1583020853804</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1583020853804</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -196,17 +220,33 @@
     <MESSAGE value="data_aggregation: added fp and fp_no column to project output excel&#10;data_cleaning: added removal of leading, tailing and multiple whitespaces. allowed for additional stop words. fixed check of wrong lemma. &#10;data_exploration: added data exploration class&#10;dtm_evaluation: added dtm evaluation class" />
     <MESSAGE value="data_aggregation: removed reading index col at read_csv/read_excel&#10;data_cleaning: changed name of topic label column;  &#10;data_exploration: changed id column to &quot;rcn&quot; instead of &quot;id&quot;" />
     <MESSAGE value="dtm_modeling: implemented stacked project list by topic" />
-    <option name="LAST_COMMIT_MESSAGE" value="dtm_modeling: implemented stacked project list by topic" />
+    <MESSAGE value="added class to generate word clouds" />
+    <option name="LAST_COMMIT_MESSAGE" value="added class to generate word clouds" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/classes/dtm_evaluation.py</url>
+          <line>37</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/classes/dtm_modeling.py</url>
+          <line>260</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="WordCloud()" language="Python" />
+        <watch expression="&quot;dif_dif_&quot; + self.files[i + 1]" language="Python" />
+        <watch expression="&quot;dif_dif_&quot; + self.files[i + 1]" language="Python" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/master_thesis_pipeline$main_test.coverage" NAME="main_test Coverage Results" MODIFIED="1583020507691" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/master_thesis_pipeline$main.coverage" NAME="main Coverage Results" MODIFIED="1583012484937" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/master_thesis_pipeline$main_test.coverage" NAME="main_test Coverage Results" MODIFIED="1584003194731" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/master_thesis_pipeline$main.coverage" NAME="main Coverage Results" MODIFIED="1583950550958" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

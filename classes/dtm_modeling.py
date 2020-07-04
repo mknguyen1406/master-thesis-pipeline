@@ -261,9 +261,40 @@ class DtmModel:
         for topic_id in range(self.num_topics):
             df = pd.read_csv(folder_path + f"topic_{topic_id}.csv", index_col=0)
 
+            # Calculate difference of word probabilities to last time slice
             for i in range(len(self.files) - 1):
-
                 df[f"dif_{self.files[i+1]}"] = df[self.files[i+1]] - df[self.files[i]]
+
+                # Calculate difference of word probabilities differences to last time slice
+                if i > 0:
+                    df[f"dif_dif_{self.files[i + 1]}"] = df[f"dif_{self.files[i + 1]}"] - df[f"dif_{self.files[i]}"]
+
+            # Change order of columns
+            columns = [
+                "fp1_projects",
+                "fp2_projects",
+                "fp3_projects",
+                "fp4_projects",
+                "fp5_projects",
+                "fp6_projects",
+                "fp7_projects",
+                "h2020_projects",
+                "dif_fp2_projects",
+                "dif_fp3_projects",
+                "dif_fp4_projects",
+                "dif_fp5_projects",
+                "dif_fp6_projects",
+                "dif_fp7_projects",
+                "dif_h2020_projects",
+                "dif_dif_fp3_projects",
+                "dif_dif_fp4_projects",
+                "dif_dif_fp5_projects",
+                "dif_dif_fp6_projects",
+                "dif_dif_fp7_projects",
+                "dif_dif_h2020_projects",
+                "topic"
+            ]
+            df = df[columns]
 
             output_file_path = folder_path + f"topic_dif_{topic_id}.csv"
             df.to_csv(output_file_path)
@@ -382,7 +413,7 @@ class DtmModel:
         df_stacked["topic"] = df_stacked["topic"].apply(lambda text: remove_prefix(text))
 
         # Join project information and make rcn normal column again
-        df_project_info = df_raw[["startDate", "fp", "title"]]
+        df_project_info = df_raw[["startDate", "fp", "fp_no", "title"]]
         df_project_topics = df_stacked.join(df_project_info, how="left").reset_index()
 
         return df_project_topics

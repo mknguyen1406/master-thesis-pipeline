@@ -8,3 +8,11 @@ This project contains the pipeline I built to
 3. apply dynamic topic modeling,
 4. extract the results 
 5. and transform the results so that they could be analyzed in Power BI.
+
+# Screenshots
+
+Below you can find screenshots of the results visualized in Power BI.
+<kbd><img src="https://github.com/mknguyen1406/master-thesis-pipeline/blob/master/screenshots/screenshot_1.png?raw=true" /></kbd>
+<kbd><img src="https://github.com/mknguyen1406/master-thesis-pipeline/blob/master/screenshots/screenshot_2.png?raw=true" /></kbd>
+<kbd><img src="https://github.com/mknguyen1406/master-thesis-pipeline/blob/master/screenshots/screenshot_3.png?raw=true" /></kbd>
+<kbd><img src="https://github.com/mknguyen1406/master-thesis-pipeline/blob/master/screenshots/screenshot_4.png?raw=true" /></kbd>
